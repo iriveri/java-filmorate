@@ -1,6 +1,7 @@
 package ru.yandex.practicum.filmorate.model;
 
 import lombok.Data;
+import ru.yandex.practicum.filmorate.validation.DateMin;
 
 import javax.validation.constraints.*;
 import java.time.Duration;
@@ -21,6 +22,7 @@ public class Film {
     private String description;
 
     @Past
+    @DateMin(value = "1895-12-28")
     private LocalDate releaseDate;
 
     @Positive

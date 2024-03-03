@@ -1,5 +1,6 @@
 package ru.yandex.practicum.filmorate.controller;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -11,17 +12,20 @@ import java.util.HashMap;
 import java.util.Map;
 
 @RestController
+@Slf4j
 public class FilmController {
     private final Map<Integer,Film> filmMap = new HashMap<>();
     @PostMapping("/film")
     public Film addFilm(@Valid @RequestBody Film film) {
         filmMap.put(film.getId(),film);
+        log.info("Добавлен новый фильм");
         return film;
     }
 
     @PutMapping("/film")
     public Film updateFilm(@Valid @RequestBody Film film) {
         filmMap.put(film.getId(),film);
+        log.info("Обновлён старый фильм");
         return film;
     }
     @GetMapping("/films")
@@ -37,6 +41,7 @@ public class FilmController {
             String fieldName = ((FieldError) error).getField();
             String errorMessage = error.getDefaultMessage();
             errors.put(fieldName, errorMessage);
+            log.warn("Ошибка валидации: " + errorMessage);
         });
         return errors;
     }

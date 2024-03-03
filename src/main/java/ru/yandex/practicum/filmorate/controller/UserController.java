@@ -1,5 +1,6 @@
 package ru.yandex.practicum.filmorate.controller;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -11,6 +12,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @RestController
+@Slf4j
 public class UserController {
     private final HashMap<Integer, User> userMap = new HashMap<>();
     @PostMapping("/user")
@@ -19,6 +21,7 @@ public class UserController {
             user.setName(user.getLogin());
         }
         userMap.put(user.getId(),user);
+        log.info("Добавлен новый пользователь");
         return user;
     }
 
@@ -28,6 +31,7 @@ public class UserController {
             user.setName(user.getLogin());
         }
         userMap.put(user.getId(),user);
+        log.info("Старый пользователь обновлен");
         return user;
     }
     @GetMapping("/users")
@@ -44,6 +48,7 @@ public class UserController {
             String fieldName = ((FieldError) error).getField();
             String errorMessage = error.getDefaultMessage();
             errors.put(fieldName, errorMessage);
+            log.warn("Ошибка валидации: " + errorMessage);
         });
         return errors;
     }
