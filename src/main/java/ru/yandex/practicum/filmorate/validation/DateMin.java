@@ -9,11 +9,13 @@ import java.lang.annotation.Target;
 
 
 @Constraint(validatedBy = DateMinValidator.class)
-@Target({ ElementType.FIELD })
+@Target({ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface DateMin {
     String message() default "Дата должна быть не раньше указанной";
+
     Class<?>[] groups() default {};
+
     Class<? extends Payload>[] payload() default {};
 
     String value();
