@@ -40,7 +40,7 @@ public class UserControllerTests {
 
     @Test
     @DisplayName("Correct user should be validated correctly")
-    void CorrectFilmShouldNotThrowException() throws Exception {
+    void correctFilmShouldNotThrowException() throws Exception {
         User testUser = new User(null, "admin@admin.ru",
                 "admin", "alex",
                 LocalDate.of(2000, 1, 1));
