@@ -16,6 +16,7 @@ import java.util.Map;
 public class FilmController {
     private final Map<Integer, Film> filmMap = new HashMap<>();
     private static int counter = 0;
+
     @PostMapping("/films")
     public ResponseEntity<Film> addUser(@Valid @RequestBody Film film) {
         if (film.getId() == null) {

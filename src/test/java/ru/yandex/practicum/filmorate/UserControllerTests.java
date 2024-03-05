@@ -41,9 +41,9 @@ public class UserControllerTests {
     @Test
     @DisplayName("Correct user should be validated correctly")
     void CorrectFilmShouldNotThrowException() throws Exception {
-        User testUser = new User(null,"admin@admin.ru",
-                "admin","alex",
-                LocalDate.of(2000,1,1));
+        User testUser = new User(null, "admin@admin.ru",
+                "admin", "alex",
+                LocalDate.of(2000, 1, 1));
 
         performUserPostAndExpectStatus(testUser, HttpStatus.OK);
     }
@@ -51,18 +51,18 @@ public class UserControllerTests {
     @Test
     @DisplayName("User email should be validated correctly")
     void userEmailShouldNotBeEmailLike() throws Exception {
-        User testUser = new User(null,"это-неправильный?эмейл@",
-                "admin","alex",
-                LocalDate.of(2000,1,1));
+        User testUser = new User(null, "это-неправильный?эмейл@",
+                "admin", "alex",
+                LocalDate.of(2000, 1, 1));
         performUserPostAndExpectStatus(testUser, HttpStatus.BAD_REQUEST);
     }
 
     @Test
     @DisplayName("User login should be validated correctly")
     void userLoginShouldNotEmptyOrContainSpaces() throws Exception {
-        User testUser = new User(null,"admin@admin.ru",
-                "a d m i n","alex",
-                LocalDate.of(2000,1,1));
+        User testUser = new User(null, "admin@admin.ru",
+                "a d m i n", "alex",
+                LocalDate.of(2000, 1, 1));
         performUserPostAndExpectStatus(testUser, HttpStatus.BAD_REQUEST);
         testUser.setLogin("");
         performUserPostAndExpectStatus(testUser, HttpStatus.BAD_REQUEST);
@@ -71,11 +71,12 @@ public class UserControllerTests {
     @Test
     @DisplayName("User birthdate should be validated correctly")
     void userBirthdateShouldBeInPast() throws Exception {
-        User testUser = new User(null,"admin@admin.ru",
-                "admin","alex",
-                LocalDate.of(2700,1,1));
+        User testUser = new User(null, "admin@admin.ru",
+                "admin", "alex",
+                LocalDate.of(2700, 1, 1));
         performUserPostAndExpectStatus(testUser, HttpStatus.BAD_REQUEST);
     }
+
     private void performUserPostAndExpectStatus(User user, HttpStatus status) throws Exception {
         String filmJson = objectMapper.writeValueAsString(user);
         mockMvc.perform(MockMvcRequestBuilders.post("/users")
