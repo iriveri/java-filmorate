@@ -2,54 +2,74 @@ package ru.yandex.practicum.filmorate.controller;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
-import org.springframework.validation.FieldError;
-import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.model.User;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
 
 @RestController
 @Slf4j
 public class UserController {
     private final HashMap<Integer, User> userMap = new HashMap<>();
-    @PostMapping("/user")
-    public User addUser(@Valid @RequestBody User user) {
-        if(user.getName().isBlank()){
+    private static int counter = 0;
+
+    @PostMapping("/users")
+    public ResponseEntity<User> addUser(@Valid @RequestBody User user) {
+        if (user.getId() == null) {
+            user.setId(generateUniqueId());
+        }
+
+        if (userMap.containsKey(user.getId())) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        if (user.getName() == null) {
             user.setName(user.getLogin());
         }
-        userMap.put(user.getId(),user);
-        log.info("Добавлен новый пользователь");
-        return user;
+
+        try {
+            userMap.put(user.getId(), user);
+            log.info("Пользователь успешно добавлен");
+            return ResponseEntity.ok(user);
+        } catch (Exception e) {
+            log.error("Ошибка при добавлении пользователя", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 
-    @PutMapping("/user")
-    public User updateUser(@Valid @RequestBody User user) {
-        if(user.getName().isBlank()){
+    @PutMapping("/users")
+    public ResponseEntity<User> updateUser(@Valid @RequestBody User user) {
+        if (!userMap.containsKey(user.getId())) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(user);
+        }
+
+        if (user.getName() == null || user.getName().isBlank()) {
             user.setName(user.getLogin());
         }
-        userMap.put(user.getId(),user);
-        log.info("Старый пользователь обновлен");
-        return user;
+
+        try {
+            userMap.put(user.getId(), user);
+            log.info("Пользователь успешно обновлён");
+            return ResponseEntity.ok(user);
+        } catch (Exception e) {
+            log.error("Ошибка при обновлении пользователя", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
+
     @GetMapping("/users")
-    public HashMap<Integer,User> getAllUsers() {
-        return userMap;
+    public ArrayList<User> getAllUsers() {
+        return new ArrayList<>(userMap.values());
     }
 
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public Map<String, String> handleValidationExceptions(
-            MethodArgumentNotValidException ex) {
-        Map<String, String> errors = new HashMap<>();
-        ex.getBindingResult().getAllErrors().forEach((error) -> {
-            String fieldName = ((FieldError) error).getField();
-            String errorMessage = error.getDefaultMessage();
-            errors.put(fieldName, errorMessage);
-            log.warn("Ошибка валидации: " + errorMessage);
-        });
-        return errors;
+    private int generateUniqueId() {
+        counter++;
+        while (userMap.containsKey(counter)) {
+            counter++;
+        }
+        return counter;
     }
 }
