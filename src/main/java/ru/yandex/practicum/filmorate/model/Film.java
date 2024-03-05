@@ -1,6 +1,8 @@
 package ru.yandex.practicum.filmorate.model;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Data;
+import ru.yandex.practicum.filmorate.serialization.DurationSerializer;
 import ru.yandex.practicum.filmorate.validation.DateMin;
 import ru.yandex.practicum.filmorate.validation.DurationPositive;
 
@@ -27,6 +29,7 @@ public class Film {
     public LocalDate releaseDate;
 
     @DurationPositive
+    @JsonSerialize(using = DurationSerializer.class)
     private Duration duration;
 
     public Film(Integer id, String name, String description, LocalDate releaseDate, Duration duration) {
