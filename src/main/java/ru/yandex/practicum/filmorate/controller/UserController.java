@@ -9,6 +9,7 @@ import ru.yandex.practicum.filmorate.model.User;
 import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 @Slf4j
@@ -17,13 +18,14 @@ public class UserController {
     private static int counter = 0;
 
     @PostMapping("/users")
-    public ResponseEntity<User> addUser(@Valid @RequestBody User user) {
-        if (user.getId() == null) {
-            user.setId(generateUniqueId());
+    public ResponseEntity<Object> addUser(@Valid @RequestBody User user) {
+
+        if (user.getId() != null && userMap.containsKey(user.getId())) {
+            return ResponseEntity.badRequest().body(Map.of("error", "Фильм с таким ID уже существует"));
         }
 
-        if (userMap.containsKey(user.getId())) {
-            return ResponseEntity.badRequest().build();
+        if (user.getId() == null) {
+            user.setId(generateUniqueId());
         }
 
         if (user.getName() == null) {
@@ -41,7 +43,7 @@ public class UserController {
     }
 
     @PutMapping("/users")
-    public ResponseEntity<User> updateUser(@Valid @RequestBody User user) {
+    public ResponseEntity<Object> updateUser(@Valid @RequestBody User user) {
         if (!userMap.containsKey(user.getId())) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(user);
         }

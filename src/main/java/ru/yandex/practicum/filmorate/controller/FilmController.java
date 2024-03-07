@@ -18,13 +18,13 @@ public class FilmController {
     private static int counter = 0;
 
     @PostMapping("/films")
-    public ResponseEntity<Film> addUser(@Valid @RequestBody Film film) {
-        if (film.getId() == null) {
-            film.setId(generateUniqueId());
+    public ResponseEntity<Object> addUser(@Valid @RequestBody Film film) {
+        if (film.getId() != null && filmMap.containsKey(film.getId())) {
+            return ResponseEntity.badRequest().body(Map.of("error", "Пользователь с таким ID уже существует"));
         }
 
-        if (filmMap.containsKey(film.getId())) {
-            return ResponseEntity.badRequest().build();
+        if (film.getId() == null) {
+            film.setId(generateUniqueId());
         }
 
         try {
@@ -38,7 +38,7 @@ public class FilmController {
     }
 
     @PutMapping("/films")
-    public ResponseEntity<Film> updateUser(@Valid @RequestBody Film film) {
+    public ResponseEntity<Object> updateUser(@Valid @RequestBody Film film) {
         if (!filmMap.containsKey(film.getId())) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(film);
         }
