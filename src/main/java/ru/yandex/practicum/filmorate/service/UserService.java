@@ -12,20 +12,20 @@ import java.util.List;
 public class UserService {
     UserStorage storage;
 
-    void addUser(User newUser){
+    public void addUser(User newUser){
         storage.addUser(newUser);
     }
-    void updateUser(User existingUser){
+    public void updateUser(User existingUser){
         storage.updateUser(existingUser);
     }
-    User getUser(int id)
+    public User getUser(int id)
     {
         return storage.getUser(id);
     }
-    void deleteUser(int id){
+    public void deleteUser(int id){
         storage.deleteUser(id);
     }
-    void addFriend(int id){
+    public void addFriend(int id){
 
     }
     public List<User> commonFriends(){
