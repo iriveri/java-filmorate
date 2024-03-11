@@ -9,14 +9,13 @@ import ru.yandex.practicum.filmorate.validation.DurationPositive;
 import javax.validation.constraints.*;
 import java.time.Duration;
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 
-/**
- * Film.
- */
 @Data
 public class Film {
 
-    private Integer id;
+    private Long id;
 
     @NotBlank
     private String name;
@@ -32,11 +31,31 @@ public class Film {
     @JsonSerialize(using = DurationSerializer.class)
     private Duration duration;
 
-    public Film(Integer id, String name, String description, LocalDate releaseDate, Duration duration) {
+    private Set<Long> likes;
+
+    public Film(Long id, String name, String description, LocalDate releaseDate, Duration duration) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.releaseDate = releaseDate;
         this.duration = duration;
+        likes = new HashSet<>();
     }
+
+    public void addLike(long userId) {
+        if (!likes.contains(userId)) {
+            likes.add(userId);
+        }
+    }
+
+    public void removeLike(long userId) {
+        if (likes.contains(userId)) {
+            likes.remove(userId);
+        }
+    }
+
+    public Long[] getLikes() {
+        return likes.toArray(new Long[0]);
+    }
+
 }
