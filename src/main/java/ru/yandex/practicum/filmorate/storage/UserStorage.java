@@ -5,6 +5,6 @@ import ru.yandex.practicum.filmorate.model.User;
 public interface UserStorage {
     void addUser(User newUser);
     void updateUser(User existingUser);
-    User getUser(int id);
-    void deleteUser(int id);
+    User getUser(long id);
+    void deleteUser(long id);
 }
