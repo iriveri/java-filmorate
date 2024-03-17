@@ -30,6 +30,7 @@ public class UserService {
     public User getUser(long userId) {
         return storage.getUser(userId);
     }
+
     public List<User> getAllUsers() {
         return storage.toList();
     }
@@ -37,7 +38,7 @@ public class UserService {
     public void deleteUser(long userId) {
         var user = storage.getUser(userId);
 
-        for(var friend : user.getFriends()){
+        for (var friend : user.getFriends()) {
             storage.getUser(friend).removeFriend(user);
         }
         storage.deleteUser(userId);
@@ -51,6 +52,7 @@ public class UserService {
         //@todo temporary solution
         friend.addFriend(user);
     }
+
     public void removeFriend(long userId, long friendId) {
         var user = storage.getUser(userId);
         var friend = storage.getUser(friendId);
@@ -58,12 +60,14 @@ public class UserService {
         user.removeFriend(friend);
         friend.removeFriend(user);
     }
+
     public List<User> getFriends(long userId) {
         return storage.getUser(userId).getFriends()
                 .stream()
                 .map(storage::getUser)
                 .collect(Collectors.toList());
     }
+
     public List<User> getCommonFriends(long firstUserId, long secondUserId) {
         var firstFriendsList = getFriends(firstUserId);
         var secondFriendsList = getFriends(secondUserId);
