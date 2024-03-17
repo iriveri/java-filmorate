@@ -1,12 +1,17 @@
 package ru.yandex.practicum.filmorate.model;
 
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
 import lombok.Data;
-import ru.yandex.practicum.filmorate.serialization.DurationSerializer;
+
+import javax.validation.constraints.Size;
+import javax.validation.constraints.Past;
+import javax.validation.constraints.NotBlank;
+
 import ru.yandex.practicum.filmorate.validation.DateMin;
 import ru.yandex.practicum.filmorate.validation.DurationPositive;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import ru.yandex.practicum.filmorate.serialization.DurationSerializer;
 
-import javax.validation.constraints.*;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.util.HashSet;
@@ -43,19 +48,15 @@ public class Film {
     }
 
     public void addLike(long userId) {
-        if (!likes.contains(userId)) {
-            likes.add(userId);
-        }
+        likes.add(userId);
     }
 
     public void removeLike(long userId) {
-        if (likes.contains(userId)) {
-            likes.remove(userId);
-        }
+        likes.remove(userId);
     }
 
-    public Long[] getLikes() {
-        return likes.toArray(new Long[0]);
+    public int getLikesSize() {
+        return likes.size();
     }
 
 }
