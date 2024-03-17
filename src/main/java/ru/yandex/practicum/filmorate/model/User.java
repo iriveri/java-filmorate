@@ -6,11 +6,15 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Past;
 import javax.validation.constraints.Pattern;
+
+import ru.yandex.practicum.filmorate.exeption.NotFoundExeption;
+
 import java.time.LocalDate;
-import java.util.Comparator;
-import java.util.HashSet;
 import java.util.Set;
-import java.util.TreeSet;
+import java.util.HashSet;
+import java.util.List;
+import java.util.ArrayList;
+
 
 @Data
 public class User {
@@ -25,7 +29,7 @@ public class User {
     private String name;
     @Past
     private LocalDate birthday;
-    private Set<Long> friends;
+    private Set<User> friends;
 
     public User(Long id, String email, String login, String name, LocalDate birthday) {
         this.id = id;
@@ -36,19 +40,24 @@ public class User {
         friends = new HashSet<>();
     }
 
-    public void addFriend(long userId) {
-        if (!friends.contains(userId)) {
-            friends.add(userId);
+    public void addFriend(User friend) {
+        if (this.equals(friend)) {
+            throw new IllegalArgumentException("Нельзя добавить самого себя в список друзей");
         }
+        if (friends.contains(friend)) {
+            throw new IllegalArgumentException("Пользователь уже есть в списке друзей");
+        }
+        friends.add(friend);
     }
 
-    public void removeFriend(long userId) {
-        if (friends.contains(userId)) {
-            friends.remove(userId);
+    public void removeFriend(User friend) {
+        if (!friends.contains(friend)) {
+            throw new NotFoundExeption("Данный пользователь не в друзьях");
         }
+        friends.remove(friend);
     }
 
-    public Long[] getFriends() {
-        return friends.toArray(new Long[0]);
+    public List<User> getFriends() {
+        return new ArrayList<>(friends);
     }
 }
