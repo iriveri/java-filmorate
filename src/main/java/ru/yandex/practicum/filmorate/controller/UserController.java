@@ -38,6 +38,12 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body(user);
     }
 
+    @GetMapping("/users")
+    public ResponseEntity<Object> getAllUsers() {
+        var users = service.getAllUsers();
+        return ResponseEntity.status(HttpStatus.OK).body(users);
+    }
+
     @GetMapping("/users/{id}")
     public ResponseEntity<Object> getUserById(@PathVariable("id") Long id) {
         User user = service.getUser(id);
@@ -47,13 +53,15 @@ public class UserController {
     @PutMapping("/users/{userId}/friends/{friendId}")
     public ResponseEntity<Object> addFriend(@PathVariable("userId") Long userId, @PathVariable("friendId") Long friendId) {
         service.addFriend(userId, friendId);
-        return ResponseEntity.status(HttpStatus.OK).build();
+        User user = service.getUser(friendId);
+        return ResponseEntity.status(HttpStatus.OK).body(user);
     }
 
     @DeleteMapping("/users/{userId}/friends/{friendId}")
     public ResponseEntity<Object> removeFriend(@PathVariable("userId") Long userId, @PathVariable("friendId") Long friendId) {
         service.removeFriend(userId, friendId);
-        return ResponseEntity.status(HttpStatus.OK).build();
+        User user = service.getUser(userId);
+        return ResponseEntity.status(HttpStatus.OK).body(user);
     }
 
     @GetMapping("/users/{id}/friends")

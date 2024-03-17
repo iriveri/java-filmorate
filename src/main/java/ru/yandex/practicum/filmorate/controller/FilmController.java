@@ -39,6 +39,12 @@ public class FilmController {
         return ResponseEntity.status(HttpStatus.OK).body(film);
     }
 
+    @GetMapping("/films")
+    public ResponseEntity<Object> getAllFilms() {
+        var films = service.getAllFilms();
+        return ResponseEntity.status(HttpStatus.OK).body(films);
+    }
+
     @GetMapping("/films/{filmId}")
     public ResponseEntity<Object> getFilm(@PathVariable("filmId") Long userId) {
         Film film = service.getFilm(userId);

@@ -6,7 +6,9 @@ import ru.yandex.practicum.filmorate.exeption.DuplicateException;
 import ru.yandex.practicum.filmorate.exeption.NotFoundExeption;
 import ru.yandex.practicum.filmorate.model.User;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 @Slf4j
 @Component
@@ -62,7 +64,7 @@ public class InMemoryUserStorage implements UserStorage {
     public User getUser(long id) {
         User user = userMap.get(id);
         if (user == null) {
-            throw new NullPointerException("Пользователя с таким ID не существует");
+            throw new NotFoundExeption("Пользователя с таким ID не существует");
         }
         return user;
     }
@@ -70,9 +72,13 @@ public class InMemoryUserStorage implements UserStorage {
     @Override
     public void deleteUser(long id) {
         if (userMap.get(id) == null) {
-            throw new NullPointerException("Пользователя с таким ID не существует");
+            throw new NotFoundExeption("Пользователя с таким ID не существует");
         }
         userMap.remove(id);
+    }
+
+    public List<User> toList() {
+        return new ArrayList<>(userMap.values());
     }
 
     private long generateUniqueId() {

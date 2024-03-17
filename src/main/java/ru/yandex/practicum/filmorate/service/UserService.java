@@ -1,16 +1,19 @@
 package ru.yandex.practicum.filmorate.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.UserStorage;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class UserService {
+    @Autowired
     UserStorage storage;
 
     public void addUser(User newUser) {
@@ -27,12 +30,15 @@ public class UserService {
     public User getUser(long userId) {
         return storage.getUser(userId);
     }
+    public List<User> getAllUsers() {
+        return storage.toList();
+    }
 
     public void deleteUser(long userId) {
         var user = storage.getUser(userId);
 
         for(var friend : user.getFriends()){
-            friend.removeFriend(user);
+            storage.getUser(friend).removeFriend(user);
         }
         storage.deleteUser(userId);
     }
@@ -53,7 +59,10 @@ public class UserService {
         friend.removeFriend(user);
     }
     public List<User> getFriends(long userId) {
-        return storage.getUser(userId).getFriends();
+        return storage.getUser(userId).getFriends()
+                .stream()
+                .map(storage::getUser)
+                .collect(Collectors.toList());
     }
     public List<User> getCommonFriends(long firstUserId, long secondUserId) {
         var firstFriendsList = getFriends(firstUserId);
