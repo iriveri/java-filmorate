@@ -24,8 +24,12 @@ import java.util.List;
 @Slf4j
 public class FilmController {
 
+    private final FilmService service;
+
     @Autowired
-    FilmService service;
+    public FilmController(FilmService service) {
+        this.service = service;
+    }
 
     @PostMapping("/films")
     public ResponseEntity<Object> addFilm(@Valid @RequestBody Film film) {
@@ -41,7 +45,7 @@ public class FilmController {
 
     @GetMapping("/films")
     public ResponseEntity<Object> getAllFilms() {
-        var films = service.getAllFilms();
+        List<Film> films = service.getAllFilms();
         return ResponseEntity.status(HttpStatus.OK).body(films);
     }
 

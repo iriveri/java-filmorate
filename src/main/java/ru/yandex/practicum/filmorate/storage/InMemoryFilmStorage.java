@@ -1,7 +1,7 @@
 package ru.yandex.practicum.filmorate.storage;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 import ru.yandex.practicum.filmorate.exeption.DuplicateException;
 import ru.yandex.practicum.filmorate.exeption.NotFoundExeption;
 import ru.yandex.practicum.filmorate.model.Film;
@@ -12,7 +12,7 @@ import java.util.List;
 
 
 @Slf4j
-@Component
+@Repository
 public class InMemoryFilmStorage implements FilmStorage {
 
     protected final HashMap<Long, Film> filmMap;
@@ -25,10 +25,6 @@ public class InMemoryFilmStorage implements FilmStorage {
 
     @Override
     public void addFilm(Film film) {
-        if (film == null) {
-            log.warn("Попытка добавить null вместо фильма");
-            throw new IllegalArgumentException("Пустой фильм не может быть добавлен");
-        }
         if (film.getId() != null && filmMap.containsKey(film.getId())) {
             log.warn("Попытка добавить уже существующий фильм");
             throw new DuplicateException("Фильм с таким ID уже существует");

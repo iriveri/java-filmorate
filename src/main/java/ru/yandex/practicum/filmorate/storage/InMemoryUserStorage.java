@@ -1,7 +1,7 @@
 package ru.yandex.practicum.filmorate.storage;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 import ru.yandex.practicum.filmorate.exeption.DuplicateException;
 import ru.yandex.practicum.filmorate.exeption.NotFoundExeption;
 import ru.yandex.practicum.filmorate.model.User;
@@ -11,7 +11,7 @@ import java.util.HashMap;
 import java.util.List;
 
 @Slf4j
-@Component
+@Repository
 public class InMemoryUserStorage implements UserStorage {
 
     protected final HashMap<Long, User> userMap;
@@ -24,10 +24,6 @@ public class InMemoryUserStorage implements UserStorage {
 
     @Override
     public void addUser(User user) {
-        if (user == null) {
-            log.warn("Попытка добавить null вместо пользователя");
-            throw new IllegalArgumentException("Пустой пользователь не может быть добавлен");
-        }
         if (user.getId() != null && userMap.containsKey(user.getId())) {
             log.warn("Попытка добавить уже существующего пользователя");
             throw new DuplicateException("Пользователь с таким ID уже существует");
