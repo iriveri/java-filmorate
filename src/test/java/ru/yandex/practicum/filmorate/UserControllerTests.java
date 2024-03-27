@@ -45,7 +45,7 @@ public class UserControllerTests {
                 "admin", "alex",
                 LocalDate.of(2000, 1, 1));
 
-        performUserPostAndExpectStatus(testUser, HttpStatus.OK);
+        performUserPostAndExpectStatus(testUser, HttpStatus.CREATED);
     }
 
     @Test

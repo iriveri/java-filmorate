@@ -46,7 +46,7 @@ public class FilmControllerTests {
                 LocalDate.of(2000, 5, 11),
                 Duration.ofMinutes(104));
 
-        performFilmPostAndExpectStatus(snatch, HttpStatus.OK);
+        performFilmPostAndExpectStatus(snatch, HttpStatus.CREATED);
     }
 
     @Test
@@ -100,7 +100,7 @@ public class FilmControllerTests {
         performFilmPostAndExpectStatus(snatch, HttpStatus.BAD_REQUEST);
 
         snatch.setDuration(Duration.ofMinutes(20));
-        performFilmPostAndExpectStatus(snatch, HttpStatus.OK);
+        performFilmPostAndExpectStatus(snatch, HttpStatus.CREATED);
     }
 
     private void performFilmPostAndExpectStatus(Film film, HttpStatus status) throws Exception {
