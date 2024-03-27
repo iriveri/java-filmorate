@@ -11,9 +11,9 @@ import ru.yandex.practicum.filmorate.validation.DateMin;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.ArrayList;
-import java.util.Set;
-import java.util.HashSet;
+import java.util.Map;
+import java.util.HashMap;
+import java.util.stream.Collectors;
 
 
 @Data
@@ -30,7 +30,7 @@ public class User {
     @Past
     @DateMin(value = "1900-01-01")
     private LocalDate birthday;
-    private Set<Long> friends;
+    private Map<Long, FriendStatus> friends;
 
     public User(Long id, String email, String login, String name, LocalDate birthday) {
         this.id = id;
@@ -38,22 +38,25 @@ public class User {
         this.login = login;
         this.name = name;
         this.birthday = birthday;
-        friends = new HashSet<>();
+        friends = new HashMap<>();
     }
 
     public void addFriend(User friend) {
         if (this.equals(friend)) {
             throw new IllegalArgumentException("Нельзя добавить самого себя в список друзей");
         }
-        friends.add(friend.getId());
+        friends.put(friend.getId(), FriendStatus.ACCEPTED);
     }
+
 
     public void removeFriend(User friend) {
         friends.remove(friend.getId());
     }
 
     public List<Long> getFriends() {
-        return new ArrayList<>(friends);
+        return friends.entrySet().stream()
+                .filter(entry -> entry.getValue() == FriendStatus.ACCEPTED)
+                .map(Map.Entry::getKey)
+                .collect(Collectors.toList());
     }
-
 }
