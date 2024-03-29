@@ -16,7 +16,7 @@
 
 **Таблица film_likes:** Содержит информацию о том, какие пользователи лайкнули какие фильмы.
 
-![DB_STRUCT](https://github.com/iriveri/java-filmorate/assets/61321955/a8aa1faa-a871-49fe-91c8-c3aba00fc222)
+![Untitled (1)](https://github.com/iriveri/java-filmorate/assets/61321955/e757dae3-e074-41f6-bfc2-3526455176f4)
 Эта схема представляет структуру базы данных
 ### Примеры запросов для основных операций приложения:
 
