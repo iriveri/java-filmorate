@@ -40,21 +40,23 @@ public class Film {
 
     private List<Genre> genres;
 
-    // Конструктор с обязательными и необязательными полями
-    public Film() { }
-    public Film(Long id,String name, String description, LocalDate releaseDate, Duration duration) {
-        this.id = id;
-        this.name = name;
-        this.description = description;
-        this.releaseDate = releaseDate;
-        this.duration = duration;// Вызываем первый конструктор для установки обязательных полей
+    public Film() {
     }
-    public Film(Long id,String name, String description, LocalDate releaseDate, Duration duration, MpaRating mpa, List<Genre> genres) {
+
+    public Film(Long id, String name, String description, LocalDate releaseDate, Duration duration) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.releaseDate = releaseDate;
-        this.duration = duration;// Вызываем первый конструктор для установки обязательных полей
+        this.duration = duration;
+    }
+
+    public Film(Long id, String name, String description, LocalDate releaseDate, Duration duration, MpaRating mpa, List<Genre> genres) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.releaseDate = releaseDate;
+        this.duration = duration;
         this.mpa = mpa;
         this.genres = genres;
     }
