@@ -9,18 +9,18 @@ import java.util.List;
 
 @Service
 public class MpaService {
-    private final RatingStorage MpaStorage;
+    private final RatingStorage ratingStorage;
 
     public MpaService(@Qualifier("DbRatingStorage") RatingStorage mpaStorage) {
-        MpaStorage = mpaStorage;
+        ratingStorage = mpaStorage;
     }
 
 
     public List<MpaRating> getAllMpas(){
-        return MpaStorage.getAllMpas();
+        return ratingStorage.getAllMpas();
     }
 
     public MpaRating getMpaById(Long id){
-        return MpaStorage.getMpaById(id);
+        return ratingStorage.getMpaById(id);
     }
 }
