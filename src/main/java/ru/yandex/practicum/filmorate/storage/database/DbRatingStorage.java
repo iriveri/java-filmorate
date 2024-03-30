@@ -19,6 +19,7 @@ import java.util.List;
 @Slf4j
 public class DbRatingStorage implements RatingStorage {
     private final JdbcTemplate jdbcTemplate;
+
     public DbRatingStorage(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
@@ -49,16 +50,15 @@ public class DbRatingStorage implements RatingStorage {
     public void validate(MpaRating rating) {
         String sqlQuery = "SELECT MAX(id) FROM rating";
         Integer id = jdbcTemplate.queryForObject(sqlQuery, Integer.class);
-        if(rating!=null&&rating.getId()>id){
+        if (rating != null && rating.getId() > id) {
             throw new NotValidException("Неверное значение параметра Mpa");
         }
     }
+
     private static class RatingMapper implements RowMapper<MpaRating> {
         @Override
         public MpaRating mapRow(ResultSet rs, int rowNum) throws SQLException {
-            return new MpaRating(
-                    rs.getLong("id"),
-                    rs.getString("name"));
+            return new MpaRating(rs.getLong("id"), rs.getString("name"));
         }
     }
 }
