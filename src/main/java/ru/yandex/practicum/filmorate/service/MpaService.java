@@ -16,11 +16,11 @@ public class MpaService {
     }
 
 
-    public List<MpaRating> getAllMpas(){
+    public List<MpaRating> getAllMpas() {
         return ratingStorage.getAllMpas();
     }
 
-    public MpaRating getMpaById(Long id){
+    public MpaRating getMpaById(Long id) {
         return ratingStorage.getMpaById(id);
     }
 }
