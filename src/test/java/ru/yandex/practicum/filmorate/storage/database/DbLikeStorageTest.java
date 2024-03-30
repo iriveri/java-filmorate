@@ -28,9 +28,9 @@ class DbLikeStorageTest {
         jdbcTemplate.update("INSERT INTO users (id,email, login, name, birthday) VALUES (?, ?, ?, ?, ?)", 2L, "user2@example.com", "user2", "User 2", Date.valueOf(LocalDate.of(1990, 1, 1)));
 
         // Добавление двух фильмов
-        jdbcTemplate.update("INSERT INTO films (id, name, description, releaseDate, duration, rating) VALUES (?, ?, ?, ?, ?, ?)", 1L, "Film 1", "Description 1", Date.valueOf(LocalDate.of(2022, 1, 1)), Duration.ofMinutes(90).toMillis(), "G");
+        jdbcTemplate.update("INSERT INTO films (id, name, description, releaseDate, duration, rating_ID) VALUES (?, ?, ?, ?, ?, ?)", 1L, "Film 1", "Description 1", Date.valueOf(LocalDate.of(2022, 1, 1)), Duration.ofMinutes(90).toMillis(), 1);
 
-        jdbcTemplate.update("INSERT INTO films (id, name, description, releaseDate, duration, rating) VALUES (?, ?, ?, ?, ?, ?)", 2L, "Film 2", "Description 2", Date.valueOf(LocalDate.of(2022, 1, 1)), Duration.ofMinutes(90).toMillis(), "G");
+        jdbcTemplate.update("INSERT INTO films (id, name, description, releaseDate, duration, rating_ID) VALUES (?, ?, ?, ?, ?, ?)", 2L, "Film 2", "Description 2", Date.valueOf(LocalDate.of(2022, 1, 1)), Duration.ofMinutes(90).toMillis(), 2);
     }
 
     @Test

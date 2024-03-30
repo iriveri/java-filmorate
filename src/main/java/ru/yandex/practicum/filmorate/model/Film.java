@@ -3,8 +3,6 @@ package ru.yandex.practicum.filmorate.model;
 
 import lombok.Data;
 
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.validation.constraints.Size;
 import javax.validation.constraints.Past;
 import javax.validation.constraints.NotBlank;
@@ -16,6 +14,8 @@ import ru.yandex.practicum.filmorate.serialization.DurationSerializer;
 
 import java.time.Duration;
 import java.time.LocalDate;
+import java.util.List;
+
 
 @Data
 public class Film {
@@ -36,16 +36,26 @@ public class Film {
     @JsonSerialize(using = DurationSerializer.class)
     private Duration duration;
 
-    @Enumerated(EnumType.STRING)
-    private FilmRatingMPA rating;
+    private MpaRating mpa;
 
-    public Film(Long id, String name, String description, LocalDate releaseDate, Duration duration, FilmRatingMPA rating) {
+    private List<Genre> genres;
+
+    // Конструктор с обязательными и необязательными полями
+    public Film() { }
+    public Film(Long id,String name, String description, LocalDate releaseDate, Duration duration) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.releaseDate = releaseDate;
-        this.duration = duration;
-        this.rating = rating;
+        this.duration = duration;// Вызываем первый конструктор для установки обязательных полей
     }
-
+    public Film(Long id,String name, String description, LocalDate releaseDate, Duration duration, MpaRating mpa, List<Genre> genres) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.releaseDate = releaseDate;
+        this.duration = duration;// Вызываем первый конструктор для установки обязательных полей
+        this.mpa = mpa;
+        this.genres = genres;
+    }
 }
