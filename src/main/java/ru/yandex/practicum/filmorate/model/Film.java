@@ -3,6 +3,8 @@ package ru.yandex.practicum.filmorate.model;
 
 import lombok.Data;
 
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.validation.constraints.Size;
 import javax.validation.constraints.Past;
 import javax.validation.constraints.NotBlank;
@@ -38,44 +40,17 @@ public class Film {
     @JsonSerialize(using = DurationSerializer.class)
     private Duration duration;
 
-    @NotBlank
-    private List<Genre> genres;
-
-    @NotBlank
+    @Enumerated(EnumType.STRING)
     private FilmRatingMPA rating;
 
-    private Set<Long> likes;
 
-
-    public Film(Long id, String name, String description, LocalDate releaseDate, Duration duration, List<Genre> genres, FilmRatingMPA rating) {
+    public Film(Long id, String name, String description, LocalDate releaseDate, Duration duration, FilmRatingMPA rating) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.releaseDate = releaseDate;
         this.duration = duration;
-        this.genres = new ArrayList<>(genres);
         this.rating = rating;
-        likes = new HashSet<>();
-    }
-
-    public void addGenre(Genre genre) {
-        genres.add(genre);
-    }
-
-    public void deleteGenre(Genre genre) {
-        genres.remove(genre);
-    }
-
-    public void addLike(long userId) {
-        likes.add(userId);
-    }
-
-    public void removeLike(long userId) {
-        likes.remove(userId);
-    }
-
-    public int getLikesSize() {
-        return likes.size();
     }
 
 }

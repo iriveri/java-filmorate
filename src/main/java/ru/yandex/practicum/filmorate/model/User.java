@@ -40,23 +40,4 @@ public class User {
         this.birthday = birthday;
         friends = new HashMap<>();
     }
-
-    public void addFriend(User friend) {
-        if (this.equals(friend)) {
-            throw new IllegalArgumentException("Нельзя добавить самого себя в список друзей");
-        }
-        friends.put(friend.getId(), FriendStatus.ACCEPTED);
-    }
-
-
-    public void removeFriend(User friend) {
-        friends.remove(friend.getId());
-    }
-
-    public List<Long> getFriends() {
-        return friends.entrySet().stream()
-                .filter(entry -> entry.getValue() == FriendStatus.ACCEPTED)
-                .map(Map.Entry::getKey)
-                .collect(Collectors.toList());
-    }
 }
