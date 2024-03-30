@@ -7,8 +7,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
-import ru.yandex.practicum.filmorate.exeption.DuplicateException;
-import ru.yandex.practicum.filmorate.exeption.NotFoundExeption;
+import ru.yandex.practicum.filmorate.exception.DuplicateException;
+import ru.yandex.practicum.filmorate.exception.NotFoundException;
 
 import java.util.Map;
 
@@ -24,8 +24,8 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
         return handleExceptionInternal(ex, Map.of("error", ex.getMessage()), new HttpHeaders(), HttpStatus.CONFLICT, request);
     }
 
-    @ExceptionHandler(NotFoundExeption.class)
-    public ResponseEntity<Object> handleRuntimeException(NotFoundExeption ex, WebRequest request) {
+    @ExceptionHandler(NotFoundException.class)
+    public ResponseEntity<Object> handleRuntimeException(NotFoundException ex, WebRequest request) {
         return handleExceptionInternal(ex, null, new HttpHeaders(), HttpStatus.NOT_FOUND, request);
     }
 
