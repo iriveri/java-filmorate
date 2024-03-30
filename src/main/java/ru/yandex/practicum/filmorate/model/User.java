@@ -10,11 +10,6 @@ import javax.validation.constraints.Pattern;
 import ru.yandex.practicum.filmorate.validation.DateMin;
 
 import java.time.LocalDate;
-import java.util.List;
-import java.util.Map;
-import java.util.HashMap;
-import java.util.stream.Collectors;
-
 
 @Data
 public class User {
@@ -30,7 +25,6 @@ public class User {
     @Past
     @DateMin(value = "1900-01-01")
     private LocalDate birthday;
-    private Map<Long, FriendStatus> friends;
 
     public User(Long id, String email, String login, String name, LocalDate birthday) {
         this.id = id;
@@ -38,6 +32,5 @@ public class User {
         this.login = login;
         this.name = name;
         this.birthday = birthday;
-        friends = new HashMap<>();
     }
 }

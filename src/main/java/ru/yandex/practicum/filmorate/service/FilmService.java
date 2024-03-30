@@ -49,11 +49,11 @@ public class FilmService {
     }
 
     public void likeFilm(long filmId, long userId) {
-        likeStorage.addLike(filmId,userId);
+        likeStorage.addLike(filmId, userId);
     }
 
     public void removeLike(long filmId, long userId) {
-        likeStorage.removeLike(filmId,userId);
+        likeStorage.removeLike(filmId, userId);
     }
 
     public List<Film> getPopularFilms(int size) {

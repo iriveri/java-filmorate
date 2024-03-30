@@ -47,11 +47,11 @@ public class UserService {
     }
 
     public void addFriend(long userId, long friendId) {
-        friendStorage.addFriend(userId,friendId);
+        friendStorage.addFriend(userId, friendId);
     }
 
     public void removeFriend(long userId, long friendId) {
-        friendStorage.removeFriend(userId,friendId);
+        friendStorage.removeFriend(userId, friendId);
     }
 
     public List<User> getFriends(long userId) {

@@ -16,10 +16,6 @@ import ru.yandex.practicum.filmorate.serialization.DurationSerializer;
 
 import java.time.Duration;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 
 @Data
 public class Film {
@@ -42,7 +38,6 @@ public class Film {
 
     @Enumerated(EnumType.STRING)
     private FilmRatingMPA rating;
-
 
     public Film(Long id, String name, String description, LocalDate releaseDate, Duration duration, FilmRatingMPA rating) {
         this.id = id;

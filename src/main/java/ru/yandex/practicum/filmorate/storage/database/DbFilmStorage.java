@@ -50,7 +50,7 @@ public class DbFilmStorage implements FilmStorage {
                 stmt.setString(1, film.getName());
                 stmt.setString(2, film.getDescription());
                 stmt.setDate(3, java.sql.Date.valueOf(film.getReleaseDate()));
-                stmt.setTime(4, java.sql.Time.valueOf(film.getDuration().toString()));
+                stmt.setLong(4, film.getDuration().toMillis());
                 stmt.setString(5, film.getRating().toString());
                 return stmt;
             }, keyHolder);
@@ -72,12 +72,7 @@ public class DbFilmStorage implements FilmStorage {
         }
         String sqlQuery = "UPDATE films SET name=?, description=?, releaseDate=?, duration=?, rating=? WHERE id = ? ";
         try {
-            jdbcTemplate.update(sqlQuery,
-                    film.getName(),
-                    film.getDescription(),
-                    java.sql.Date.valueOf(film.getReleaseDate()),
-                    java.sql.Time.valueOf(film.getDuration().toString()),
-                    film.getRating().toString());
+            jdbcTemplate.update(sqlQuery, film.getName(), film.getDescription(), java.sql.Date.valueOf(film.getReleaseDate()), film.getDuration().toMillis(), film.getRating().toString(), film.getId());
             log.info("Фильм {} успешно обновлён", id);
         } catch (DataAccessException e) {
             log.error("Ошибка при добавлении фильма", e);
@@ -87,8 +82,8 @@ public class DbFilmStorage implements FilmStorage {
 
     @Override
     public Film getFilm(long id) {
-        try{
-        String sqlQuery = "SELECT * FROM films WHERE id=? LIMIT 1";
+        try {
+            String sqlQuery = "SELECT * FROM films WHERE id=? LIMIT 1";
             Film film = jdbcTemplate.queryForObject(sqlQuery, new FilmMapper(), id);
             log.info("Фильм {} успешно извлечён", id);
             return film;
@@ -130,13 +125,7 @@ public class DbFilmStorage implements FilmStorage {
     private static class FilmMapper implements RowMapper<Film> {
         @Override
         public Film mapRow(ResultSet rs, int rowNum) throws SQLException {
-            return new Film(
-                    rs.getLong("id"),
-                    rs.getString("name"),
-                    rs.getString("description"),
-                    rs.getDate("releaseDate").toLocalDate(),
-                    Duration.ofMillis(rs.getTime("duration").getTime()),
-                    FilmRatingMPA.valueOf(rs.getString("rating")));
+            return new Film(rs.getLong("id"), rs.getString("name"), rs.getString("description"), rs.getDate("releaseDate").toLocalDate(), Duration.ofMillis(rs.getLong("duration")), FilmRatingMPA.valueOf(rs.getString("rating")));
         }
     }
 }

@@ -32,7 +32,7 @@ public class DbGenreStorage implements GenreStorage {
 
     @Override
     public List<Genre> getGenres(Long userId) {
-        String sql = "SELECT genre FROM film_genres WHERE user_id = ?";
+        String sql = "SELECT genre FROM film_genres WHERE film_id = ?";
         return jdbcTemplate.queryForList(sql, Genre.class, userId);
     }
 }

@@ -69,12 +69,7 @@ public class DbUserStorage implements UserStorage {
         }
         String sqlQuery = "UPDATE users SET email=?, login=?, name=?, birthday=? WHERE id = ? ";
         try {
-            jdbcTemplate.update(sqlQuery,
-                    user.getEmail(),
-                    user.getLogin(),
-                    user.getName(),
-                    user.getBirthday(),
-                    user.getId());
+            jdbcTemplate.update(sqlQuery, user.getEmail(), user.getLogin(), user.getName(), user.getBirthday(), user.getId());
             log.info("Пользователь {} успешно обновлён", id);
         } catch (DataAccessException e) {
             log.error("Ошибка при добавлении пользователя", e);
@@ -127,12 +122,7 @@ public class DbUserStorage implements UserStorage {
     private static class UserMapper implements RowMapper<User> {
         @Override
         public User mapRow(ResultSet rs, int rowNum) throws SQLException {
-            return new User(
-                    rs.getLong("id"),
-                    rs.getString("email"),
-                    rs.getString("login"),
-                    rs.getString("name"),
-                    rs.getDate("birthday").toLocalDate());
+            return new User(rs.getLong("id"), rs.getString("email"), rs.getString("login"), rs.getString("name"), rs.getDate("birthday").toLocalDate());
         }
     }
 }
