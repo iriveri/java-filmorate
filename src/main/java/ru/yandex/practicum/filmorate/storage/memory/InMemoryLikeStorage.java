@@ -41,7 +41,7 @@ public class InMemoryLikeStorage implements LikeStorage {
     }
 
     @Override
-    public List<Long> getPopularFilmsId(int size){
+    public List<Long> getPopularFilmsId(int size) {
         return filmLikesMap.entrySet().stream()
                 .sorted(Comparator.comparingInt(entry -> entry.getValue().size()))
                 .limit(size)

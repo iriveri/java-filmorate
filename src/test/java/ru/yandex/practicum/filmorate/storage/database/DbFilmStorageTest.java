@@ -24,7 +24,7 @@ class DbFilmStorageTest {
     @Test
     void addFilm() {
         DbFilmStorage filmStorage = new DbFilmStorage(jdbcTemplate);
-        Film film = new Film(null, "Test Film", "Test Description", LocalDate.of(2022, 1, 1), Duration.ofMinutes(90),null,null);
+        Film film = new Film(null, "Test Film", "Test Description", LocalDate.of(2022, 1, 1), Duration.ofMinutes(90), null, null);
 
         filmStorage.addFilm(film);
 
@@ -35,7 +35,7 @@ class DbFilmStorageTest {
     @Test
     void updateFilm() {
         DbFilmStorage filmStorage = new DbFilmStorage(jdbcTemplate);
-        Film film = new Film(null, "Test Film", "Test Description", LocalDate.of(2022, 1, 1), Duration.ofMinutes(90),null,null);
+        Film film = new Film(null, "Test Film", "Test Description", LocalDate.of(2022, 1, 1), Duration.ofMinutes(90), null, null);
 
         filmStorage.addFilm(film);
         film.setMpa(new MpaRating(2L));
@@ -48,7 +48,7 @@ class DbFilmStorageTest {
     @Test
     void getFilm() {
         DbFilmStorage filmStorage = new DbFilmStorage(jdbcTemplate);
-        Film film = new Film(null, "Test Film", "Test Description", LocalDate.of(2022, 1, 1), Duration.ofMinutes(90),null,null);
+        Film film = new Film(null, "Test Film", "Test Description", LocalDate.of(2022, 1, 1), Duration.ofMinutes(90), null, null);
 
         filmStorage.addFilm(film);
 
@@ -59,7 +59,7 @@ class DbFilmStorageTest {
     @Test
     void deleteFilm() {
         DbFilmStorage filmStorage = new DbFilmStorage(jdbcTemplate);
-        Film film = new Film(999L, "Test Film", "Test Description", LocalDate.of(2022, 1, 1), Duration.ofMinutes(90),null,null);
+        Film film = new Film(999L, "Test Film", "Test Description", LocalDate.of(2022, 1, 1), Duration.ofMinutes(90), null, null);
 
         filmStorage.addFilm(film);
         filmStorage.deleteFilm(999L);
@@ -71,8 +71,8 @@ class DbFilmStorageTest {
     @Test
     void toList() {
         DbFilmStorage filmStorage = new DbFilmStorage(jdbcTemplate);
-        Film film1 = new Film(null, "Test Film 1", "Test Description 1", LocalDate.of(2022, 1, 1), Duration.ofMinutes(90),null,null);
-        Film film2 = new Film(null, "Test Film 2", "Test Description 2", LocalDate.of(2023, 2, 2), Duration.ofMinutes(85),null,null);
+        Film film1 = new Film(null, "Test Film 1", "Test Description 1", LocalDate.of(2022, 1, 1), Duration.ofMinutes(90), null, null);
+        Film film2 = new Film(null, "Test Film 2", "Test Description 2", LocalDate.of(2023, 2, 2), Duration.ofMinutes(85), null, null);
 
         filmStorage.addFilm(film1);
         filmStorage.addFilm(film2);
