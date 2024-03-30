@@ -16,12 +16,9 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import ru.yandex.practicum.filmorate.controller.FilmController;
 import ru.yandex.practicum.filmorate.model.Film;
-import ru.yandex.practicum.filmorate.model.FilmRatingMPA;
-import ru.yandex.practicum.filmorate.model.Genre;
 
 import java.time.Duration;
 import java.time.LocalDate;
-import java.util.List;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -47,8 +44,7 @@ public class FilmControllerTests {
     void correctFilmShouldNotThrowException() throws Exception {
         Film snatch = new Film(null, "Snatch", "Описание фильма \"Большой куш\":",
                 LocalDate.of(2000, 5, 11),
-                Duration.ofMinutes(104),
-                FilmRatingMPA.R);
+                Duration.ofMinutes(104),null,null);
 
         performFilmPostAndExpectStatus(snatch, HttpStatus.CREATED);
     }
@@ -58,8 +54,7 @@ public class FilmControllerTests {
     void filmNameShouldNotBeEmpty() throws Exception {
         Film snatch = new Film(null, "", "Описание фильма \"Большой куш\":",
                 LocalDate.of(2000, 5, 11),
-                Duration.ofMinutes(104),
-                FilmRatingMPA.R);
+                Duration.ofMinutes(104),null,null);
 
         performFilmPostAndExpectStatus(snatch, HttpStatus.BAD_REQUEST);
     }
@@ -77,8 +72,7 @@ public class FilmControllerTests {
                 " Напряженный сюжет и харизматичные актеры" +
                 " делают его шедевром жанра криминальной комедии.",
                 LocalDate.of(2000, 5, 11),
-                Duration.ofMinutes(104),
-                FilmRatingMPA.R);
+                Duration.ofMinutes(104),null,null);
 
         performFilmPostAndExpectStatus(snatch, HttpStatus.BAD_REQUEST);
     }
@@ -88,8 +82,7 @@ public class FilmControllerTests {
     void filmReleaseDateShouldBeInCorrectBounds() throws Exception {
         Film snatch = new Film(null, "Snatch", "Описание фильма \"Большой куш\":",
                 LocalDate.of(1700, 5, 11),
-                Duration.ofMinutes(104),
-                FilmRatingMPA.R);
+                Duration.ofMinutes(104),null,null);
 
         performFilmPostAndExpectStatus(snatch, HttpStatus.BAD_REQUEST);
 
@@ -103,8 +96,7 @@ public class FilmControllerTests {
         Film snatch = new Film(null, "Snatch",
                 "Описание фильма \"Большой куш\":",
                 LocalDate.of(2000, 5, 11),
-                Duration.ofMinutes(-1),
-                FilmRatingMPA.R);
+                Duration.ofMinutes(-1),null,null);
 
         performFilmPostAndExpectStatus(snatch, HttpStatus.BAD_REQUEST);
 

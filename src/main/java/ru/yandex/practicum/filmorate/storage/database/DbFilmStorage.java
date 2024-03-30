@@ -3,7 +3,6 @@ package ru.yandex.practicum.filmorate.storage.database;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -12,14 +11,16 @@ import org.springframework.stereotype.Repository;
 import ru.yandex.practicum.filmorate.exception.DuplicateException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
-import ru.yandex.practicum.filmorate.model.FilmRatingMPA;
+import ru.yandex.practicum.filmorate.model.MpaRating;
 import ru.yandex.practicum.filmorate.storage.FilmStorage;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Types;
 import java.time.Duration;
 import java.util.List;
+import java.util.Objects;
 
 
 @Slf4j
@@ -42,7 +43,7 @@ public class DbFilmStorage implements FilmStorage {
             throw new DuplicateException("Фильм с таким ID " + id + " уже существует");
         }
 
-        String sqlQuery = "INSERT INTO films (name, description, releaseDate, duration, rating) VALUES (?, ?, ?, ?, ?)";
+        String sqlQuery = "INSERT INTO films (name, description, releaseDate, duration, rating_ID) VALUES (?, ?, ?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
         try {
             jdbcTemplate.update(connection -> {
@@ -51,13 +52,18 @@ public class DbFilmStorage implements FilmStorage {
                 stmt.setString(2, film.getDescription());
                 stmt.setDate(3, java.sql.Date.valueOf(film.getReleaseDate()));
                 stmt.setLong(4, film.getDuration().toMillis());
-                stmt.setString(5, film.getRating().toString());
+                MpaRating mpa = film.getMpa();
+                if (mpa == null) {
+                    stmt.setNull(5, Types.INTEGER);
+                } else {
+                    stmt.setInt(5, mpa.getId().intValue());
+                }
                 return stmt;
             }, keyHolder);
-            long newId = keyHolder.getKey().longValue();
+            long newId = Objects.requireNonNull(keyHolder.getKey()).longValue();
             film.setId(newId);
             log.info("Фильм {} успешно добавлен", newId);
-        } catch (DataAccessException e) {
+        } catch (Exception e) {
             log.error("Ошибка при добавлении фильма", e);
             throw new RuntimeException("Ошибка при добавлении фильма");
         }
@@ -70,11 +76,11 @@ public class DbFilmStorage implements FilmStorage {
             log.warn("Фильм с таким ID {} не найден", id);
             throw new NotFoundException("Фильм с таким ID " + id + " не найден");
         }
-        String sqlQuery = "UPDATE films SET name=?, description=?, releaseDate=?, duration=?, rating=? WHERE id = ? ";
+        String sqlQuery = "UPDATE films SET name=?, description=?, releaseDate=?, duration=?, rating_id=? WHERE id = ? ";
         try {
-            jdbcTemplate.update(sqlQuery, film.getName(), film.getDescription(), java.sql.Date.valueOf(film.getReleaseDate()), film.getDuration().toMillis(), film.getRating().toString(), film.getId());
+            jdbcTemplate.update(sqlQuery, film.getName(), film.getDescription(), java.sql.Date.valueOf(film.getReleaseDate()), film.getDuration().toMillis(), film.getMpa().getId(), film.getId());
             log.info("Фильм {} успешно обновлён", id);
-        } catch (DataAccessException e) {
+        } catch (Exception e) {
             log.error("Ошибка при добавлении фильма", e);
             throw new RuntimeException("Ошибка при добавлении фильма");
         }
@@ -87,7 +93,7 @@ public class DbFilmStorage implements FilmStorage {
             Film film = jdbcTemplate.queryForObject(sqlQuery, new FilmMapper(), id);
             log.info("Фильм {} успешно извлечён", id);
             return film;
-        } catch (DataAccessException e) {
+        } catch (Exception e) {
             log.warn("Фильм с таким ID {} не найден", id);
             throw new NotFoundException("Фильм с таким ID " + id + " не найден");
         }
@@ -98,7 +104,7 @@ public class DbFilmStorage implements FilmStorage {
         try {
             jdbcTemplate.update("DELETE FROM films WHERE id=?", id);
             log.info("Фильм {} успешно удалён", id);
-        } catch (DataAccessException e) {
+        } catch (Exception e) {
             log.warn("Фильм с таким ID {} не найден", id);
             throw new NotFoundException("Фильм с таким ID " + id + " не найден");
         }
@@ -110,7 +116,7 @@ public class DbFilmStorage implements FilmStorage {
             List<Film> films = jdbcTemplate.query("SELECT * FROM films", new FilmMapper());
             log.info("Список фильмов успешно извлечён");
             return films;
-        } catch (DataAccessException e) {
+        } catch (Exception e) {
             log.error("Ошибка при извлечении списка фильмов", e);
             throw new RuntimeException("Ошибка при извлечении списка фильмов");
         }
@@ -125,7 +131,15 @@ public class DbFilmStorage implements FilmStorage {
     private static class FilmMapper implements RowMapper<Film> {
         @Override
         public Film mapRow(ResultSet rs, int rowNum) throws SQLException {
-            return new Film(rs.getLong("id"), rs.getString("name"), rs.getString("description"), rs.getDate("releaseDate").toLocalDate(), Duration.ofMillis(rs.getLong("duration")), FilmRatingMPA.valueOf(rs.getString("rating")));
+            Film film = new Film(rs.getLong("id"), rs.getString("name"), rs.getString("description"), rs.getDate("releaseDate").toLocalDate(), Duration.ofMillis(rs.getLong("duration")), null, null);
+            Integer ratingId = (Integer) rs.getObject("rating_id");
+            if (rs.wasNull()) {
+                film.setMpa(null);
+            } else {
+                film.setMpa(new MpaRating(ratingId.longValue()));
+            }
+
+            return film;
         }
     }
 }
