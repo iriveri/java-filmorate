@@ -11,34 +11,25 @@ import java.util.*;
 @Repository
 @Qualifier("InMemoryGenreStorage")
 public class InMemoryGenreStorage implements GenreStorage {
-    private final Map<Long, List<Genre>> userGenresMap;
-    private static final String[] genreList = {
-            "Action",
-            "Comedy",
-            "Drama",
-            "Cartoon",
-            "Thriller",
-            "Documentary",
-            "ActionFilm"
-    };
+    private final Map<Long, List<Genre>> filmGenresMap;
 
     public InMemoryGenreStorage() {
-        this.userGenresMap = new HashMap<>();
+        this.filmGenresMap = new HashMap<>();
     }
 
     @Override
     public void addFilmGenre(Long filmId, Genre genre) {
-        userGenresMap.computeIfAbsent(filmId, key -> new ArrayList<>()).add(genre);
+        filmGenresMap.computeIfAbsent(filmId, key -> new ArrayList<>()).add(genre);
     }
 
     @Override
     public void addFilmGenre(Long filmId, List<Genre> genres) {
-
+        filmGenresMap.computeIfAbsent(filmId, key -> new ArrayList<>()).addAll(genres);
     }
 
     @Override
     public void removeFilmGenre(Long filmId, Genre genre) {
-        List<Genre> genres = userGenresMap.get(filmId);
+        List<Genre> genres = filmGenresMap.get(filmId);
         if (genres != null) {
             genres.remove(genre);
         }
@@ -46,21 +37,24 @@ public class InMemoryGenreStorage implements GenreStorage {
 
     @Override
     public void validate(List<Genre> genre) {
-
+        // Метод validate не нужен для InMemoryGenreStorage
     }
 
     @Override
-    public     Genre getGenreById(Long id) {
+    public Genre getGenreById(Long id) {
+        // Метод getGenreById не нужен для InMemoryGenreStorage
         return null;
     }
+
     @Override
-    public List<Genre> getFilmGenre(Long filmId){
-        return null;
+    public List<Genre> getFilmGenre(Long filmId) {
+        return filmGenresMap.getOrDefault(filmId, new ArrayList<>());
     }
 
     @Override
     public List<Genre> getGenresList() {
+        // Метод getGenresList не нужен для InMemoryGenreStorage
         return null;
     }
-
 }
+
