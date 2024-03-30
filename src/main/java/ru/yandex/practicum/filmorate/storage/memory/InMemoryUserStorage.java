@@ -1,10 +1,12 @@
-package ru.yandex.practicum.filmorate.storage;
+package ru.yandex.practicum.filmorate.storage.memory;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
-import ru.yandex.practicum.filmorate.exeption.DuplicateException;
-import ru.yandex.practicum.filmorate.exeption.NotFoundExeption;
+import ru.yandex.practicum.filmorate.exception.DuplicateException;
+import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.storage.UserStorage;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -12,6 +14,7 @@ import java.util.List;
 
 @Slf4j
 @Repository
+@Qualifier("InMemoryUserStorage")
 public class InMemoryUserStorage implements UserStorage {
 
     protected final HashMap<Long, User> userMap;
@@ -44,7 +47,7 @@ public class InMemoryUserStorage implements UserStorage {
     public void updateUser(User user) {
         if (!userMap.containsKey(user.getId())) {
             log.warn("Попытка обновить несуществующего пользователя");
-            throw new NotFoundExeption("Пользователь с таким ID не найден");
+            throw new NotFoundException("Пользователь с таким ID не найден");
         }
 
         try {
@@ -60,7 +63,7 @@ public class InMemoryUserStorage implements UserStorage {
     public User getUser(long id) {
         User user = userMap.get(id);
         if (user == null) {
-            throw new NotFoundExeption("Пользователя с таким ID не существует");
+            throw new NotFoundException("Пользователя с таким ID " + id + " не существует");
         }
         return user;
     }
@@ -68,7 +71,7 @@ public class InMemoryUserStorage implements UserStorage {
     @Override
     public void deleteUser(long id) {
         if (userMap.get(id) == null) {
-            throw new NotFoundExeption("Пользователя с таким ID не существует");
+            throw new NotFoundException("Пользователя с таким ID не существует");
         }
         userMap.remove(id);
     }
