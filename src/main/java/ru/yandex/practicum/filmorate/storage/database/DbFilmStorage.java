@@ -4,7 +4,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
@@ -13,12 +12,10 @@ import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.model.MpaRating;
 import ru.yandex.practicum.filmorate.storage.FilmStorage;
+import ru.yandex.practicum.filmorate.storage.database.mapper.FilmMapper;
 
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.sql.Types;
-import java.time.Duration;
 import java.util.List;
 import java.util.Objects;
 
@@ -111,7 +108,7 @@ public class DbFilmStorage implements FilmStorage {
     }
 
     @Override
-    public List<Film> toList() {
+    public List<Film> getAllFilmsList() {
         try {
             List<Film> films = jdbcTemplate.query("SELECT * FROM films", new FilmMapper());
             log.info("Список фильмов успешно извлечён");
@@ -124,22 +121,6 @@ public class DbFilmStorage implements FilmStorage {
 
     private boolean isFilmExistsById(long id) {
         String sqlQuery = "SELECT COUNT(*) FROM films WHERE id = ?";
-        int count = jdbcTemplate.queryForObject(sqlQuery, Integer.class, id);
-        return count > 0;
-    }
-
-    private static class FilmMapper implements RowMapper<Film> {
-        @Override
-        public Film mapRow(ResultSet rs, int rowNum) throws SQLException {
-            Film film = new Film(rs.getLong("id"), rs.getString("name"), rs.getString("description"), rs.getDate("releaseDate").toLocalDate(), Duration.ofMillis(rs.getLong("duration")), null, null);
-            Integer ratingId = (Integer) rs.getObject("rating_id");
-            if (rs.wasNull()) {
-                film.setMpa(null);
-            } else {
-                film.setMpa(new MpaRating(ratingId.longValue()));
-            }
-
-            return film;
-        }
+        return jdbcTemplate.queryForObject(sqlQuery, Integer.class, id) > 0;
     }
 }

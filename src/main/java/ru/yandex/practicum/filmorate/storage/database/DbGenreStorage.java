@@ -2,7 +2,6 @@ package ru.yandex.practicum.filmorate.storage.database;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataAccessException;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -10,9 +9,8 @@ import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.exception.NotValidException;
 import ru.yandex.practicum.filmorate.model.Genre;
 import ru.yandex.practicum.filmorate.storage.GenreStorage;
+import ru.yandex.practicum.filmorate.storage.database.mapper.GenreMapper;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.List;
 
 @Repository
@@ -107,13 +105,6 @@ public class DbGenreStorage implements GenreStorage {
         } catch (Exception e) {
             log.warn("Ошибка при извлечении списка жанров");
             throw new NotFoundException("Ошибка при извлечении списка жанров");
-        }
-    }
-
-    private static class GenreMapper implements RowMapper<Genre> {
-        @Override
-        public Genre mapRow(ResultSet rs, int rowNum) throws SQLException {
-            return new Genre(rs.getLong("id"), rs.getString("name"));
         }
     }
 }

@@ -77,7 +77,7 @@ class DbFilmStorageTest {
         filmStorage.addFilm(film1);
         filmStorage.addFilm(film2);
 
-        List<Film> filmList = filmStorage.toList();
+        List<Film> filmList = filmStorage.getAllFilmsList();
         assertThat(filmList).containsExactly(film1, film2);
     }
 }

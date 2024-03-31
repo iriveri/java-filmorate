@@ -74,7 +74,7 @@ class DbUserStorageTest {
         userStorage.addUser(user1);
         userStorage.addUser(user2);
 
-        List<User> userList = userStorage.toList();
+        List<User> userList = userStorage.getAllUserList();
         assertThat(userList).containsExactly(user1, user2);
     }
 }

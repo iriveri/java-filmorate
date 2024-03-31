@@ -39,7 +39,7 @@ public class UserService {
     }
 
     public List<User> getAllUsers() {
-        return userStorage.toList();
+        return userStorage.getAllUserList();
     }
 
     public void deleteUser(long userId) {

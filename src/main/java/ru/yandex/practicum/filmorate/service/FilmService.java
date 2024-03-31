@@ -49,7 +49,7 @@ public class FilmService {
     }
 
     public List<Film> getAllFilms() {
-        return filmStorage.toList();
+        return filmStorage.getAllFilmsList();
     }
 
     public void deleteFilm(long id) {

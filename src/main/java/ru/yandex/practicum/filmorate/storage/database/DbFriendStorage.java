@@ -83,13 +83,11 @@ public class DbFriendStorage implements FriendStorage {
 
     private boolean userDoesntExistsById(long id) {
         String sqlQuery = "SELECT COUNT(*) FROM users WHERE id = ?";
-        int count = jdbcTemplate.queryForObject(sqlQuery, Integer.class, id);
-        return count == 0;
+        return jdbcTemplate.queryForObject(sqlQuery, Integer.class, id) == 0;
     }
 
     private boolean isAlreadyFriends(Long userId, Long friendId) {
         String sqlQuery = "SELECT COUNT(*) FROM user_friends WHERE user_id = ? AND friend_id = ?";
-        int count = jdbcTemplate.queryForObject(sqlQuery, Integer.class, userId, friendId);
-        return count > 0;
+        return jdbcTemplate.queryForObject(sqlQuery, Integer.class, userId, friendId) > 0;
     }
 }

@@ -76,7 +76,7 @@ public class InMemoryUserStorage implements UserStorage {
         userMap.remove(id);
     }
 
-    public List<User> toList() {
+    public List<User> getAllUserList() {
         return new ArrayList<>(userMap.values());
     }
 

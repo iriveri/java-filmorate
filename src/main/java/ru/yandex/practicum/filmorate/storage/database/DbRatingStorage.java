@@ -2,16 +2,14 @@ package ru.yandex.practicum.filmorate.storage.database;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 import org.springframework.beans.factory.annotation.Qualifier;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.exception.NotValidException;
 import ru.yandex.practicum.filmorate.model.MpaRating;
 import ru.yandex.practicum.filmorate.storage.RatingStorage;
+import ru.yandex.practicum.filmorate.storage.database.mapper.RatingMapper;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.List;
 
 @Repository
@@ -52,13 +50,6 @@ public class DbRatingStorage implements RatingStorage {
         Integer id = jdbcTemplate.queryForObject(sqlQuery, Integer.class);
         if (rating != null && rating.getId() > id) {
             throw new NotValidException("Неверное значение параметра Mpa");
-        }
-    }
-
-    private static class RatingMapper implements RowMapper<MpaRating> {
-        @Override
-        public MpaRating mapRow(ResultSet rs, int rowNum) throws SQLException {
-            return new MpaRating(rs.getLong("id"), rs.getString("name"));
         }
     }
 }

@@ -5,7 +5,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
@@ -14,10 +13,9 @@ import ru.yandex.practicum.filmorate.exception.DuplicateException;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.UserStorage;
+import ru.yandex.practicum.filmorate.storage.database.mapper.UserMapper;
 
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.List;
 
 @Slf4j
@@ -102,7 +100,7 @@ public class DbUserStorage implements UserStorage {
     }
 
     @Override
-    public List<User> toList() {
+    public List<User> getAllUserList() {
         try {
             List<User> users = jdbcTemplate.query("SELECT * FROM users", new UserMapper());
             log.info("Список пользователей успешно извлечён");
@@ -115,14 +113,6 @@ public class DbUserStorage implements UserStorage {
 
     private boolean isUserExistsById(long id) {
         String sqlQuery = "SELECT COUNT(*) FROM users WHERE id = ?";
-        int count = jdbcTemplate.queryForObject(sqlQuery, Integer.class, id);
-        return count > 0;
-    }
-
-    private static class UserMapper implements RowMapper<User> {
-        @Override
-        public User mapRow(ResultSet rs, int rowNum) throws SQLException {
-            return new User(rs.getLong("id"), rs.getString("email"), rs.getString("login"), rs.getString("name"), rs.getDate("birthday").toLocalDate());
-        }
+        return jdbcTemplate.queryForObject(sqlQuery, Integer.class, id) > 0;
     }
 }
