@@ -1,8 +1,10 @@
 package ru.yandex.practicum.filmorate.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.storage.FriendStorage;
 import ru.yandex.practicum.filmorate.storage.UserStorage;
 
 import java.util.ArrayList;
@@ -11,72 +13,64 @@ import java.util.stream.Collectors;
 
 @Service
 public class UserService {
-    private final UserStorage storage;
+    private final UserStorage userStorage;
+    private final FriendStorage friendStorage;
 
     @Autowired
-    public UserService(UserStorage storage) {
-        this.storage = storage;
+    public UserService(@Qualifier("DbUserStorage") UserStorage storage,
+                       @Qualifier("DbFriendStorage") FriendStorage friendStorage) {
+        this.userStorage = storage;
+        this.friendStorage = friendStorage;
     }
 
     public void addUser(User newUser) {
         if (newUser.getName() == null) {
             newUser.setName(newUser.getLogin());
         }
-        storage.addUser(newUser);
+        userStorage.addUser(newUser);
     }
 
     public void updateUser(User existingUser) {
-        storage.updateUser(existingUser);
+        userStorage.updateUser(existingUser);
     }
 
     public User getUser(long userId) {
-        return storage.getUser(userId);
+        return userStorage.getUser(userId);
     }
 
     public List<User> getAllUsers() {
-        return storage.toList();
+        return userStorage.getAllUserList();
     }
 
     public void deleteUser(long userId) {
-        var user = storage.getUser(userId);
-
-        for (var friend : user.getFriends()) {
-            storage.getUser(friend).removeFriend(user);
-        }
-        storage.deleteUser(userId);
+        userStorage.deleteUser(userId);
     }
 
     public void addFriend(long userId, long friendId) {
-        var user = storage.getUser(userId);
-        var friend = storage.getUser(friendId);
-
-        user.addFriend(friend);
-        //@todo temporary solution
-        friend.addFriend(user);
+        friendStorage.addFriend(userId, friendId);
     }
 
     public void removeFriend(long userId, long friendId) {
-        var user = storage.getUser(userId);
-        var friend = storage.getUser(friendId);
-
-        user.removeFriend(friend);
-        friend.removeFriend(user);
+        friendStorage.removeFriend(userId, friendId);
     }
 
     public List<User> getFriends(long userId) {
-        return storage.getUser(userId).getFriends()
-                .stream()
-                .map(storage::getUser)
+        List<Long> friendsId = friendStorage.getFriends(userId);
+
+        return friendsId.stream()
+                .map(this::getUser)
                 .collect(Collectors.toList());
     }
 
     public List<User> getCommonFriends(long firstUserId, long secondUserId) {
-        var firstFriendsList = getFriends(firstUserId);
-        var secondFriendsList = getFriends(secondUserId);
+        var firstFriendsList = friendStorage.getFriends(firstUserId);
+        var secondFriendsList = friendStorage.getFriends(secondUserId);
 
-        List<User> common = new ArrayList<>(firstFriendsList);
+        List<Long> common = new ArrayList<>(firstFriendsList);
         common.retainAll(secondFriendsList);
 
-        return common;
+        return common.stream()
+                .map(this::getUser)
+                .collect(Collectors.toList());
     }
 }

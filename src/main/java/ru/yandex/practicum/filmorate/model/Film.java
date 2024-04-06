@@ -14,10 +14,8 @@ import ru.yandex.practicum.filmorate.serialization.DurationSerializer;
 
 import java.time.Duration;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
+
 
 @Data
 public class Film {
@@ -38,44 +36,28 @@ public class Film {
     @JsonSerialize(using = DurationSerializer.class)
     private Duration duration;
 
-    @NotBlank
+    private MpaRating mpa;
+
     private List<Genre> genres;
 
-    @NotBlank
-    private FilmRatingMPA rating;
+    public Film() {
+    }
 
-    private Set<Long> likes;
-
-
-    public Film(Long id, String name, String description, LocalDate releaseDate, Duration duration, List<Genre> genres, FilmRatingMPA rating) {
+    public Film(Long id, String name, String description, LocalDate releaseDate, Duration duration) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.releaseDate = releaseDate;
         this.duration = duration;
-        this.genres = new ArrayList<>(genres);
-        this.rating = rating;
-        likes = new HashSet<>();
     }
 
-    public void addGenre(Genre genre) {
-        genres.add(genre);
+    public Film(Long id, String name, String description, LocalDate releaseDate, Duration duration, MpaRating mpa, List<Genre> genres) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.releaseDate = releaseDate;
+        this.duration = duration;
+        this.mpa = mpa;
+        this.genres = genres;
     }
-
-    public void deleteGenre(Genre genre) {
-        genres.remove(genre);
-    }
-
-    public void addLike(long userId) {
-        likes.add(userId);
-    }
-
-    public void removeLike(long userId) {
-        likes.remove(userId);
-    }
-
-    public int getLikesSize() {
-        return likes.size();
-    }
-
 }

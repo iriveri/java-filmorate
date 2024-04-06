@@ -16,12 +16,9 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import ru.yandex.practicum.filmorate.controller.FilmController;
 import ru.yandex.practicum.filmorate.model.Film;
-import ru.yandex.practicum.filmorate.model.FilmRatingMPA;
-import ru.yandex.practicum.filmorate.model.Genre;
 
 import java.time.Duration;
 import java.time.LocalDate;
-import java.util.List;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -45,10 +42,7 @@ public class FilmControllerTests {
     @Test
     @DisplayName("Correct film should be validated correctly")
     void correctFilmShouldNotThrowException() throws Exception {
-        Film snatch = new Film(null, "Snatch", "Описание фильма \"Большой куш\":",
-                LocalDate.of(2000, 5, 11),
-                Duration.ofMinutes(104), List.of(Genre.Comedy, Genre.ActionFilm),
-                FilmRatingMPA.R);
+        Film snatch = new Film(null, "Snatch", "Описание фильма \"Большой куш\":", LocalDate.of(2000, 5, 11), Duration.ofMinutes(104), null, null);
 
         performFilmPostAndExpectStatus(snatch, HttpStatus.CREATED);
     }
@@ -56,10 +50,7 @@ public class FilmControllerTests {
     @Test
     @DisplayName("Film name should be validated correctly")
     void filmNameShouldNotBeEmpty() throws Exception {
-        Film snatch = new Film(null, "", "Описание фильма \"Большой куш\":",
-                LocalDate.of(2000, 5, 11),
-                Duration.ofMinutes(104), List.of(Genre.Comedy, Genre.ActionFilm),
-                FilmRatingMPA.R);
+        Film snatch = new Film(null, "", "Описание фильма \"Большой куш\":", LocalDate.of(2000, 5, 11), Duration.ofMinutes(104), null, null);
 
         performFilmPostAndExpectStatus(snatch, HttpStatus.BAD_REQUEST);
     }
@@ -68,17 +59,7 @@ public class FilmControllerTests {
     @DisplayName("Film description should be less than 200")
     void filmDescriptionShouldBeLessThan200() throws Exception {
         // 201 words description
-        Film snatch = new Film(null, "Snatch", "Описание фильма \"Большой куш\":" +
-                " Четверо друзей решают ограбить казино" +
-                " в Лондоне, но все идет не по плану. Им" +
-                " приходится столкнуться с мафией и полицией," +
-                " чтобы выжить. Фильм полон черного юмора," +
-                " неожиданных поворотов и интересных персонажей." +
-                " Напряженный сюжет и харизматичные актеры" +
-                " делают его шедевром жанра криминальной комедии.",
-                LocalDate.of(2000, 5, 11),
-                Duration.ofMinutes(104), List.of(Genre.Comedy, Genre.ActionFilm),
-                FilmRatingMPA.R);
+        Film snatch = new Film(null, "Snatch", "Описание фильма \"Большой куш\":" + " Четверо друзей решают ограбить казино" + " в Лондоне, но все идет не по плану. Им" + " приходится столкнуться с мафией и полицией," + " чтобы выжить. Фильм полон черного юмора," + " неожиданных поворотов и интересных персонажей." + " Напряженный сюжет и харизматичные актеры" + " делают его шедевром жанра криминальной комедии.", LocalDate.of(2000, 5, 11), Duration.ofMinutes(104), null, null);
 
         performFilmPostAndExpectStatus(snatch, HttpStatus.BAD_REQUEST);
     }
@@ -86,10 +67,7 @@ public class FilmControllerTests {
     @Test
     @DisplayName("Film release date should be validated correctly")
     void filmReleaseDateShouldBeInCorrectBounds() throws Exception {
-        Film snatch = new Film(null, "Snatch", "Описание фильма \"Большой куш\":",
-                LocalDate.of(1700, 5, 11),
-                Duration.ofMinutes(104), List.of(Genre.Comedy, Genre.ActionFilm),
-                FilmRatingMPA.R);
+        Film snatch = new Film(null, "Snatch", "Описание фильма \"Большой куш\":", LocalDate.of(1700, 5, 11), Duration.ofMinutes(104), null, null);
 
         performFilmPostAndExpectStatus(snatch, HttpStatus.BAD_REQUEST);
 
@@ -100,11 +78,7 @@ public class FilmControllerTests {
     @Test
     @DisplayName("Film duration should be validated correctly")
     void filmDurationShouldBeGreaterThanZero() throws Exception {
-        Film snatch = new Film(null, "Snatch",
-                "Описание фильма \"Большой куш\":",
-                LocalDate.of(2000, 5, 11),
-                Duration.ofMinutes(-1), List.of(Genre.Comedy, Genre.ActionFilm),
-                FilmRatingMPA.R);
+        Film snatch = new Film(null, "Snatch", "Описание фильма \"Большой куш\":", LocalDate.of(2000, 5, 11), Duration.ofMinutes(-1), null, null);
 
         performFilmPostAndExpectStatus(snatch, HttpStatus.BAD_REQUEST);
 
@@ -114,9 +88,6 @@ public class FilmControllerTests {
 
     private void performFilmPostAndExpectStatus(Film film, HttpStatus status) throws Exception {
         String filmJson = objectMapper.writeValueAsString(film);
-        mockMvc.perform(MockMvcRequestBuilders.post("/films")
-                        .content(filmJson)
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(MockMvcResultMatchers.status().is(status.value()));
+        mockMvc.perform(MockMvcRequestBuilders.post("/films").content(filmJson).contentType(MediaType.APPLICATION_JSON)).andExpect(MockMvcResultMatchers.status().is(status.value()));
     }
 }

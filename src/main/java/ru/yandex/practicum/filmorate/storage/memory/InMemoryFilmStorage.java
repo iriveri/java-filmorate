@@ -1,10 +1,12 @@
-package ru.yandex.practicum.filmorate.storage;
+package ru.yandex.practicum.filmorate.storage.memory;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
-import ru.yandex.practicum.filmorate.exeption.DuplicateException;
-import ru.yandex.practicum.filmorate.exeption.NotFoundExeption;
+import ru.yandex.practicum.filmorate.exception.DuplicateException;
+import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.storage.FilmStorage;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -13,6 +15,7 @@ import java.util.List;
 
 @Slf4j
 @Repository
+@Qualifier("InMemoryFilmStorage")
 public class InMemoryFilmStorage implements FilmStorage {
 
     protected final HashMap<Long, Film> filmMap;
@@ -46,7 +49,7 @@ public class InMemoryFilmStorage implements FilmStorage {
     public void updateFilm(Film film) {
         if (!filmMap.containsKey(film.getId())) {
             log.warn("Попытка обновить несуществующий фильм");
-            throw new NotFoundExeption("Фильм с таким ID не найден");
+            throw new NotFoundException("Фильм с таким ID не найден");
         }
 
         try {
@@ -83,7 +86,7 @@ public class InMemoryFilmStorage implements FilmStorage {
         return counter;
     }
 
-    public List<Film> toList() {
+    public List<Film> getAllFilmsList() {
         return new ArrayList<>(filmMap.values());
     }
 }

@@ -13,5 +13,5 @@ public interface UserStorage {
 
     void deleteUser(long id);
 
-    List<User> toList();
+    List<User> getAllUserList();
 }

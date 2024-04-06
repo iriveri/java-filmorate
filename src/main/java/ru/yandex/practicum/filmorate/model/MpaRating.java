@@ -3,18 +3,18 @@ package ru.yandex.practicum.filmorate.model;
 import lombok.Data;
 
 @Data
-public class Genre {
+public class MpaRating {
     private Long id;
     private String name;
 
-    public Genre() {
+    public MpaRating() {
     }
 
-    public Genre(Long id) {
+    public MpaRating(Long id) {
         this.id = id;
     }
 
-    public Genre(Long id, String name) {
+    public MpaRating(Long id, String name) {
         this.id = id;
         this.name = name;
     }
